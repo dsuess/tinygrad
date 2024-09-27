@@ -11,6 +11,8 @@ if __name__ == "__main__":
     A, B = Tensor.empty(1, N, dtype=dtypes.float), Tensor.empty(14336, N, dtype=dtypes.float16).T
   else:
     A, B = Tensor.empty(N, N, dtype=dtypes.float16), Tensor.empty(N, N, dtype=dtypes.float16)
+
+  #A, B = Tensor.empty(N, N, dtype=dtypes.float32), Tensor.empty(N, N, dtype=dtypes.float32)
   C = A.matmul(B)
   si = C.schedule()[-1]
   ast = si.ast
@@ -23,12 +25,14 @@ if __name__ == "__main__":
   else:
     opts = [
       Opt(op=OptOps.TC, axis=0, amt=0),
-      Opt(op=OptOps.UPCAST, axis=0, amt=4),
-      Opt(op=OptOps.UPCAST, axis=1, amt=8),
-      Opt(op=OptOps.LOCAL, axis=0, amt=2),
-      Opt(op=OptOps.LOCAL, axis=1, amt=2),
-      Opt(op=OptOps.LOCAL, axis=0, amt=2),
+      # Opt(op=OptOps.UPCAST, axis=0, amt=4),
+      # Opt(op=OptOps.UPCAST, axis=1, amt=8),
+      # Opt(op=OptOps.LOCAL, axis=0, amt=2),
+      # Opt(op=OptOps.LOCAL, axis=1, amt=2),
+      # Opt(op=OptOps.LOCAL, axis=0, amt=2),
     ]
+
+  #opts = []
   for opt in opts: k.apply_opt(opt)
   prg = k.to_program()
   new_src = prg.src
